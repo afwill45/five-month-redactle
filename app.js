@@ -41,6 +41,7 @@ const state = {
   startTime: Date.now(),
   solved: false,
   gaveUp: false,
+  revealAll: false,
   timerId: null
 };
 
@@ -94,7 +95,7 @@ function tokenize(text) {
 function shouldReveal(token) {
   const word = normalize(token);
   if (!/[a-z0-9]/.test(word)) return true;
-  return state.gaveUp || alwaysVisible.has(word) || [...state.guessedWords].some(guess => matchesGuess(word, guess));
+  return state.revealAll || alwaysVisible.has(word) || [...state.guessedWords].some(guess => matchesGuess(word, guess));
 }
 
 function renderText(text, container) {
@@ -184,6 +185,7 @@ function formatTime(ms) {
 function finishGame(gaveUp = false) {
   state.solved = true;
   state.gaveUp = gaveUp;
+  state.revealAll = true;
   clearInterval(state.timerId);
   renderArticle();
   els.input.disabled = true;
@@ -224,6 +226,7 @@ function resetGame() {
   state.startTime = Date.now();
   state.solved = false;
   state.gaveUp = false;
+  state.revealAll = false;
   els.input.disabled = false;
   els.form.querySelector("button").disabled = false;
   els.feedback.textContent = "";
