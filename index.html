@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171c22" />
+    <meta name="description" content="A private five-month anniversary Redactle puzzle." />
+    <title>Redactle — Anniversary Puzzle</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171c22'/%3E%3Cpath fill='%23aeb6c4' d='M8 18h48v12H8zm0 20h34v12H8z'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="logo" href="#" aria-label="Redactle home"><span>R</span>E<span>D</span>ACTLE</a>
+      <nav aria-label="Main navigation">
+        <button id="resetButton" class="nav-button">New Game</button>
+        <button class="nav-button" id="settingsButton">Settings</button>
+        <button class="nav-button desktop-only">News</button>
+        <button class="nav-button" id="menuButton">How to Play</button>
+        <button class="nav-button" id="statsButton">Stats</button>
+        <button class="nav-button desktop-only">More games</button>
+        <span class="support desktop-only">Support ☕</span>
+      </nav>
+      <span class="signin">↪ <span class="desktop-only">SIGN IN</span></span>
+    </header>
+
+    <main class="game-shell">
+      <section class="article-pane" aria-labelledby="articleTitle">
+        <div class="player-mark">1<span>E</span>P</div>
+        <div class="puzzle-nav">
+          <button aria-label="Previous puzzle">«</button><span>PUZZLE 5</span>
+        </div>
+        <details class="about">
+          <summary>About Puzzle #5</summary>
+          <p>Your mission is to unveil the title of this anniversary puzzle with as few guesses as possible.</p>
+        </details>
+        <article class="article" aria-label="Redacted encyclopedia article">
+          <h1 id="articleTitle" class="article-title" aria-label="Redacted article title"></h1>
+          <div id="articleBody"></div>
+        </article>
+      </section>
+
+      <aside class="guess-pane" aria-label="Guess panel">
+        <div class="score-line">
+          <span><strong id="hitCount">0</strong>/<strong id="guessCount">0</strong></span>
+          <span id="timer">0s</span><span id="accuracy" class="sr-only">—</span>
+        </div>
+        <form id="guessForm" class="guess-form">
+          <button type="button" class="top-button" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲ TOP</button>
+          <label class="sr-only" for="guessInput">Enter a word</label>
+          <input id="guessInput" type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Enter a word" maxlength="40" />
+          <button type="submit" class="search-button" aria-label="Submit guess">⌕ <span>(0)</span></button>
+        </form>
+        <p id="guessFeedback" class="feedback" role="status" aria-live="polite"></p>
+        <ul class="tips">
+          <li>🔍 A guess reveals that word across the article, plus its variations.</li>
+          <li>🏆 Reveal the title to win. You don't need the rest of the article.</li>
+        </ul>
+        <div class="history" aria-label="Guess history">
+          <div class="history-head"><span>Guess</span><span>Count</span></div>
+          <ol id="guessHistory"></ol>
+          <p id="emptyHistory" class="empty-history">Your guesses will appear here.</p>
+        </div>
+        <div class="side-actions">
+          <button id="giveUpButton">Give up</button>
+          <button id="sideResetButton">Restart</button>
+        </div>
+        <footer class="site-footer">
+          <p>Redactle — The Wikipedia Game.</p>
+          <p>Made personal for five months ♥</p>
+        </footer>
+      </aside>
+    </main>
+
+    <dialog id="infoDialog" class="dialog">
+      <button class="dialog-close" data-close aria-label="Close">×</button>
+      <h2>How to Play</h2>
+      <p>Guess words that might appear in the hidden article. Every match is revealed throughout the page.</p>
+      <p>Reveal the redacted title to solve the puzzle.</p>
+      <button class="dialog-action" data-close>Close</button>
+    </dialog>
+    <dialog id="settingsDialog" class="dialog">
+      <button class="dialog-close" data-close aria-label="Close">×</button>
+      <h2>Settings</h2>
+      <label class="setting-row"><input id="largeTextToggle" type="checkbox" /> Larger article text</label>
+      <button class="dialog-action" data-close>Close</button>
+    </dialog>
+    <dialog id="winDialog" class="dialog win-dialog">
+      <button class="dialog-close" data-close aria-label="Close">×</button>
+      <div class="heart">♥</div>
+      <p class="kicker">ARTICLE UNCOVERED</p>
+      <h2>Happy five months, Jade.</h2>
+      <p id="winSummary"></p>
+      <p class="love-note">Five months down. A whole encyclopedia of us still to write.</p>
+      <button id="shareButton" class="dialog-action">Copy result</button>
+    </dialog>
+    <script src="app.js"></script>
+  </body>
+</html>
