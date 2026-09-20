@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#171c22" />
-    <meta name="description" content="A private five-month anniversary Redactle puzzle." />
+    <meta name="description" content="A five-month anniversary Redactle puzzle." />
     <title>Redactle — Anniversary Puzzle</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23171c22'/%3E%3Cpath fill='%23aeb6c4' d='M8 18h48v12H8zm0 20h34v12H8z'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="styles.css" />
@@ -32,7 +32,7 @@
         </div>
         <details class="about">
           <summary>About Puzzle #5</summary>
-          <p>Your mission is to unveil the title of this anniversary puzzle with as few guesses as possible.</p>
+          <p>Your mission is to unveil the two-word title of this anniversary puzzle with as few guesses as possible.</p>
         </details>
         <article class="article" aria-label="Redacted encyclopedia article">
           <h1 id="articleTitle" class="article-title" aria-label="Redacted article title"></h1>
@@ -54,7 +54,7 @@
         <p id="guessFeedback" class="feedback" role="status" aria-live="polite"></p>
         <ul class="tips">
           <li>🔍 A guess reveals that word across the article, plus its variations.</li>
-          <li>🏆 Reveal the title to win. You don't need the rest of the article.</li>
+          <li>🏆 Reveal both title words to win. The whole page—including its images—will then be unveiled.</li>
         </ul>
         <div class="history" aria-label="Guess history">
           <div class="history-head"><span>Guess</span><span>Count</span></div>
@@ -76,7 +76,7 @@
       <button class="dialog-close" data-close aria-label="Close">×</button>
       <h2>How to Play</h2>
       <p>Guess words that might appear in the hidden article. Every match is revealed throughout the page.</p>
-      <p>Reveal the redacted title to solve the puzzle.</p>
+      <p>Reveal both words in the redacted title to solve the puzzle. When you get it right, the entire page and every image will be unveiled.</p>
       <button class="dialog-action" data-close>Close</button>
     </dialog>
     <dialog id="settingsDialog" class="dialog">
@@ -89,11 +89,11 @@
       <button class="dialog-close" data-close aria-label="Close">×</button>
       <div class="heart">♥</div>
       <p class="kicker">ARTICLE UNCOVERED</p>
-      <h2>Happy five months, Jade.</h2>
+      <h2>Happy five months, MJ.</h2>
       <p id="winSummary"></p>
-      <p class="love-note">Five months down. A whole encyclopedia of us still to write.</p>
+      <p class="love-note">My heart beats for you. All day, every day.</p>
       <button id="shareButton" class="dialog-action">Copy result</button>
     </dialog>
-    <script src="app.js?v=2"></script>
+    <script src="app.js?v=3"></script>
   </body>
 </html>
