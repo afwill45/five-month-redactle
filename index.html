@@ -52,6 +52,10 @@
           <button type="submit" class="search-button" aria-label="Submit guess">⌕ <span>(0)</span></button>
         </form>
         <p id="guessFeedback" class="feedback" role="status" aria-live="polite"></p>
+        <div id="hintPanel" class="hint-panel" hidden aria-live="polite">
+          <p class="hint-label">HINT <span id="hintProgress">0/4</span></p>
+          <ol id="hintList"></ol>
+        </div>
         <ul class="tips">
           <li>🔍 A guess reveals that word across the article, plus its variations.</li>
           <li>🏆 Reveal both title words to win. The whole page—including its images—will then be unveiled.</li>
@@ -62,6 +66,7 @@
           <p id="emptyHistory" class="empty-history">Your guesses will appear here.</p>
         </div>
         <div class="side-actions">
+          <button id="hintButton" class="hint-button">Get a hint</button>
           <button id="giveUpButton">Give up</button>
           <button id="sideResetButton">Restart</button>
         </div>
@@ -94,6 +99,6 @@
       <p class="love-note">My heart beats for you. All day, every day.</p>
       <button id="shareButton" class="dialog-action">Copy result</button>
     </dialog>
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
   </body>
 </html>
