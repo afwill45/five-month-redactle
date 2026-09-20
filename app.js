@@ -66,14 +66,22 @@ const alwaysVisible = new Set([
   "a", "an", "and", "are", "as", "at", "be", "been", "between", "by", "for", "from", "had", "has", "have", "he", "her", "him", "his", "i", "in", "is", "it", "its", "not", "of", "on", "or", "she", "so", "that", "the", "their", "them", "they", "this", "to", "was", "were", "who", "with"
 ]);
 
-const state = { guesses: [], guessedWords: new Set(), startTime: Date.now(), solved: false, gaveUp: false, revealAll: false, timerId: null };
+const hints = [
+  "The answer is a place we went to alone.",
+  "It is located on Massachusetts’ North Shore.",
+  "It was the destination of a birthday outing that Afolabi considers an early first date.",
+  "The second title word is “Castle.”"
+];
+
+const state = { guesses: [], guessedWords: new Set(), hintsUsed: 0, startTime: Date.now(), solved: false, gaveUp: false, revealAll: false, timerId: null };
 
 const els = {
   title: document.querySelector("#articleTitle"), body: document.querySelector("#articleBody"), form: document.querySelector("#guessForm"),
   input: document.querySelector("#guessInput"), feedback: document.querySelector("#guessFeedback"), guessCount: document.querySelector("#guessCount"),
   hitCount: document.querySelector("#hitCount"), accuracy: document.querySelector("#accuracy"), history: document.querySelector("#guessHistory"),
   emptyHistory: document.querySelector("#emptyHistory"), timer: document.querySelector("#timer"), info: document.querySelector("#infoDialog"),
-  win: document.querySelector("#winDialog"), winSummary: document.querySelector("#winSummary")
+  win: document.querySelector("#winDialog"), winSummary: document.querySelector("#winSummary"), hintPanel: document.querySelector("#hintPanel"),
+  hintList: document.querySelector("#hintList"), hintProgress: document.querySelector("#hintProgress"), hintButton: document.querySelector("#hintButton")
 };
 
 function normalize(value) { return value.toLocaleLowerCase().replace(/[’]/g, "'").replace(/[^a-z0-9'-]/g, "").trim(); }
@@ -186,10 +194,32 @@ function formatTime(ms) {
 }
 function finishGame(gaveUp = false) {
   state.solved = true; state.gaveUp = gaveUp; state.revealAll = true; clearInterval(state.timerId); renderArticle();
-  els.input.disabled = true; els.form.querySelector("button[type='submit']").disabled = true;
+  els.input.disabled = true; els.form.querySelector("button[type='submit']").disabled = true; els.hintButton.disabled = true;
   const time = formatTime(Date.now() - state.startTime);
-  els.winSummary.textContent = gaveUp ? `The whole page was unveiled after ${state.guesses.length} guesses.` : `You uncovered Hammond Castle in ${state.guesses.length} guesses and ${time}. The whole page is now unveiled.`;
+  const hintText = state.hintsUsed ? ` and ${state.hintsUsed} ${state.hintsUsed === 1 ? "hint" : "hints"}` : "";
+  els.winSummary.textContent = gaveUp ? `The whole page was unveiled after ${state.guesses.length} guesses${hintText}.` : `You uncovered Hammond Castle in ${state.guesses.length} guesses${hintText} and ${time}. The whole page is now unveiled.`;
   window.setTimeout(() => els.win.showModal(), 350);
+}
+
+function useHint() {
+  if (state.solved || state.hintsUsed >= hints.length) return;
+  const hint = hints[state.hintsUsed];
+  state.hintsUsed += 1;
+  const item = document.createElement("li");
+  item.textContent = hint;
+  els.hintList.append(item);
+  els.hintPanel.hidden = false;
+  els.hintProgress.textContent = `${state.hintsUsed}/${hints.length}`;
+  els.hintButton.textContent = state.hintsUsed === hints.length ? "All hints used" : "Next hint";
+  els.hintButton.disabled = state.hintsUsed === hints.length;
+  els.feedback.textContent = `Hint ${state.hintsUsed} revealed.`;
+  els.feedback.className = "feedback";
+
+  if (state.hintsUsed === hints.length) {
+    state.guessedWords.add("castle");
+    flashWord("castle");
+    if (isTitleSolved()) finishGame(false);
+  }
 }
 
 function makeGuess(raw) {
@@ -208,8 +238,8 @@ function makeGuess(raw) {
 }
 
 function resetGame() {
-  clearInterval(state.timerId); state.guesses = []; state.guessedWords = new Set(); state.startTime = Date.now(); state.solved = false; state.gaveUp = false; state.revealAll = false;
-  els.input.disabled = false; els.form.querySelector("button[type='submit']").disabled = false; els.feedback.textContent = "";
+  clearInterval(state.timerId); state.guesses = []; state.guessedWords = new Set(); state.hintsUsed = 0; state.startTime = Date.now(); state.solved = false; state.gaveUp = false; state.revealAll = false;
+  els.input.disabled = false; els.form.querySelector("button[type='submit']").disabled = false; els.hintButton.disabled = false; els.hintButton.textContent = "Get a hint"; els.hintPanel.hidden = true; els.hintList.replaceChildren(); els.hintProgress.textContent = `0/${hints.length}`; els.feedback.textContent = "";
   if (els.win.open) els.win.close(); renderArticle(); updateStats(); updateHistory(); startTimer(); els.input.focus();
 }
 function startTimer() { els.timer.textContent = "0s"; state.timerId = setInterval(() => { els.timer.textContent = formatTime(Date.now() - state.startTime); }, 1000); }
@@ -239,12 +269,13 @@ document.querySelector("#menuButton").addEventListener("click", () => els.info.s
 document.querySelector("#settingsButton").addEventListener("click", () => document.querySelector("#settingsDialog").showModal());
 document.querySelector("#largeTextToggle").addEventListener("change", event => document.body.classList.toggle("large-text", event.target.checked));
 document.querySelector("#sideResetButton").addEventListener("click", resetGame);
+els.hintButton.addEventListener("click", useHint);
 document.querySelector("#statsButton").addEventListener("click", () => { els.feedback.textContent = `${state.guesses.length} guesses so far · ${els.accuracy.textContent} accuracy.`; els.feedback.className = "feedback"; els.feedback.scrollIntoView({ behavior: "smooth", block: "center" }); });
 document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", () => button.closest("dialog").close()));
 document.querySelector("#giveUpButton").addEventListener("click", () => { if (!state.solved && window.confirm("Reveal the whole article?")) finishGame(true); });
 document.querySelector("#resetButton").addEventListener("click", resetGame);
 document.querySelector("#shareButton").addEventListener("click", async event => {
-  const hits = state.guesses.filter(item => item.hits).length; const result = `Redactle #5 ♥\n${state.guesses.length} guesses · ${hits} hits · ${els.timer.textContent}`;
+  const hits = state.guesses.filter(item => item.hits).length; const result = `Redactle #5 ♥\n${state.guesses.length} guesses · ${hits} hits · ${state.hintsUsed} hints · ${els.timer.textContent}`;
   try { await navigator.clipboard.writeText(result); event.currentTarget.textContent = "COPIED!"; } catch { event.currentTarget.textContent = "COPY UNAVAILABLE"; }
 });
 
