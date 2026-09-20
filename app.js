@@ -196,8 +196,9 @@ function finishGame(gaveUp = false) {
   state.solved = true; state.gaveUp = gaveUp; state.revealAll = true; clearInterval(state.timerId); renderArticle();
   els.input.disabled = true; els.form.querySelector("button[type='submit']").disabled = true; els.hintButton.disabled = true;
   const time = formatTime(Date.now() - state.startTime);
+  const guessText = `${state.guesses.length} ${state.guesses.length === 1 ? "guess" : "guesses"}`;
   const hintText = state.hintsUsed ? ` and ${state.hintsUsed} ${state.hintsUsed === 1 ? "hint" : "hints"}` : "";
-  els.winSummary.textContent = gaveUp ? `The whole page was unveiled after ${state.guesses.length} guesses${hintText}.` : `You uncovered Hammond Castle in ${state.guesses.length} guesses${hintText} and ${time}. The whole page is now unveiled.`;
+  els.winSummary.textContent = gaveUp ? `The whole page was unveiled after ${guessText}${hintText}.` : `You uncovered Hammond Castle in ${time} using ${guessText}${hintText}. The whole page is now unveiled.`;
   window.setTimeout(() => els.win.showModal(), 350);
 }
 
